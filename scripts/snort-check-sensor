@@ -2,7 +2,6 @@
 import sys
 import traceback
 from snort import snortdb
-import glob
 import datetime
 
 def check(sensor,timeout):
