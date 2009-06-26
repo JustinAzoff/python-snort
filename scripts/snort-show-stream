@@ -1,0 +1,4 @@
+#!/bin/sh
+SRC=$1
+DST=$2
+snort-show-ip -i $SRC -d $DST -o

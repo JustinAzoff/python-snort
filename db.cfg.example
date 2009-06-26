@@ -1,0 +1,9 @@
+[db]
+#driver     = mysql
+driver      = postgres
+host        = dbhost
+user        = snort
+pass        = password
+database    = snort
+
+uri = %(driver)s://%(user)s:%(pass)s@%(host)s/%(database)s
