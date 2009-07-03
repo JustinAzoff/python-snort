@@ -274,7 +274,7 @@ class sdb:
         clauses = list(self.where_clause)
         clauses.append(or_(e.ip_src==ip_int, e.ip_dst==ip_int))
         return select(
-            [e.sig, func.count(e.sig), func.min(e.timestamp).label("first"), func.max(e.timestamp).label("last")],
+            [e.sig, func.count(e.sig).label("count"), func.min(e.timestamp).label("first"), func.max(e.timestamp).label("last")],
             whereclause = and_(*clauses),
             group_by = [e.sig],
             ).execute()
