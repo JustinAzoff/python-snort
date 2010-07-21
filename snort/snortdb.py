@@ -54,11 +54,20 @@ class sdb:
         if not (startdate or enddate or range or offset or span!=1):
             startdate = datetime.datetime.today()
 
-        if range in ["minute", "minutes", "hour","hours","day","days","month","months","week","weeks"] :
-            offsetpn = int(offset+span)
-            tempargs = {'offsetpn':offsetpn ,  'range':range , 'offset':offset }
-            q="SELECT current_timestamp - interval '%(offsetpn)d %(range)s', current_timestamp - interval '%(offset)d %(range)s'" % tempargs
-            startdate, enddate = list(self._rowquery(q))[0]
+        now = datetime.datetime.now()
+
+        allowed = set(["minutes", "hours","days","months","weeks"])
+        if range and range+'s' in allowed:
+            range = range + 's'
+        if range in allowed:
+            kw = {range: span+offset}
+            delta_start = datetime.timedelta(**kw)
+            startdate = now - delta_start
+
+            if offset:
+                kw = {range: offset}
+                delta_end = datetime.timedelta(**kw)
+                enddate = now - delta_end
 
         self.where_args=[]
         if startdate:
@@ -66,11 +75,10 @@ class sdb:
             self.startdate=str(startdate)
             self.where_args.append(str(startdate))
 
-            #if not enddate:
-            #    enddate = datetime.datetime.now()
-            #ret += " AND timestamp < %s "
-            #self.enddate=str(enddate)
-            #self.where_args.append(str(enddate))
+            if enddate:
+                ret += " AND timestamp < %s "
+                self.enddate=str(enddate)
+                self.where_args.append(str(enddate))
 
             self.where=ret
             return
