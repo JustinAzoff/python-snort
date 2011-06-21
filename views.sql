@@ -1,7 +1,7 @@
 drop view event_simple_by_event;
 CREATE view event_simple_by_event
 AS
-SELECT e.cid, e.sid, e.timestamp, s.sig_id, s.sig_name as sig, d.data_payload as data, i.ip_src, i.ip_dst,
+SELECT e.cid, e.sid, e.timestamp, s.sig_sid, s.sig_name as sig, d.data_payload as data, i.ip_src, i.ip_dst,
         COALESCE(tcp_dport, udp_dport) as dport,
         COALESCE(tcp_sport, udp_sport) as sport,
         CASE WHEN tcp_dport is not null THEN 'tcp'
@@ -20,7 +20,7 @@ SELECT e.cid, e.sid, e.timestamp, s.sig_id, s.sig_name as sig, d.data_payload as
 drop view event_simple_by_ip;
 CREATE view event_simple_by_ip
 AS
-SELECT i.cid, i.sid, e.timestamp, e.signature as sig_id, s.sig_name as sig, d.data_payload as data, i.ip_src, i.ip_dst,
+SELECT i.cid, i.sid, e.timestamp, s.sig_sid, s.sig_name as sig, d.data_payload as data, i.ip_src, i.ip_dst,
         COALESCE(tcp_dport, udp_dport) as dport,
         COALESCE(tcp_sport, udp_sport) as sport,
         CASE WHEN tcp_dport is not null THEN 'tcp'
@@ -40,7 +40,7 @@ SELECT i.cid, i.sid, e.timestamp, e.signature as sig_id, s.sig_name as sig, d.da
 drop view event_simple_by_event_with_data;
 CREATE view event_simple_by_event_with_data
 AS
-SELECT e.cid, e.sid, e.timestamp, s.sig_id, s.sig_name as sig, d.data_payload as data, i.ip_src, i.ip_dst,
+SELECT e.cid, e.sid, e.timestamp, s.sig_sid, s.sig_name as sig, d.data_payload as data, i.ip_src, i.ip_dst,
         COALESCE(tcp_dport, udp_dport) as dport,
         COALESCE(tcp_sport, udp_sport) as sport,
         CASE WHEN tcp_dport is not null THEN 'tcp'

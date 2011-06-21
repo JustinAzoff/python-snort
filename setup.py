@@ -3,7 +3,7 @@ import sys, os
 from glob import glob
 
 
-version = '1.0.1'
+version = '1.0.2'
 
 setup(name='snort',
     version=version,

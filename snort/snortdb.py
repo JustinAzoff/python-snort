@@ -101,7 +101,7 @@ class sdb:
            call with no arguments to remove the limit"""
         self.limit=limit
 
-    def find(self, sig=None, sig_id=None, src=None, dst=None, host=None, hostpair=None, data=None, proto=None, sport=None, dport=None,sid=None, idpair=None):
+    def find(self, sig=None, sig_sid=None, src=None, dst=None, host=None, hostpair=None, data=None, proto=None, sport=None, dport=None,sid=None, idpair=None):
         """Search for any matching events. All critera are ANDed together"""
         if data:
             t = Table('event_simple_by_event_with_data', self.metadata,autoload=True)
@@ -118,8 +118,8 @@ class sdb:
             s = '%' + sig + '%'
             clauses.append(e.sig.op("ILIKE")(s))
 
-        if sig_id:
-            clauses.append(e.sig_id==sig_id)
+        if sig_sid:
+            clauses.append(e.sig_sid==sig_sid)
             
         if src:
             ip=IPy.IP(src)
@@ -238,7 +238,7 @@ class sdb:
     def signatures(self):
         """Return a list of dictionaries of signatures, last hits, and source and dest counts"""
         q="""
-        SELECT s.sig_id, s.sig_name as sig,  COUNT(s.sig_id),
+        SELECT s.sig_sid, s.sig_name as sig,  COUNT(s.sig_sid),
             MAX(timestamp) as max_time,
             COUNT(DISTINCT ip_src) as sources,
             COUNT(DISTINCT ip_dst) as dests
@@ -246,7 +246,7 @@ class sdb:
             LEFT JOIN iphdr i on i.cid = e.cid and i.sid = e.sid
         WHERE %s
         AND e.signature = s.sig_id
-        GROUP BY sig_id, sig_name ORDER BY COUNT(signature) DESC
+        GROUP BY sig_sid, sig_name ORDER BY COUNT(signature) DESC
         """ % self.where
 
         return self._dictquery(q, *self.where_args)
