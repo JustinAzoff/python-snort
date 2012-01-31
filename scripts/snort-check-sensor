@@ -19,18 +19,23 @@ def check(sensor,timeout):
     return 0
 
 def main():
-    if len(sys.argv)!=3:
+    if len(sys.argv) <3 :
         print 'usage %s sensor_hostname timeout' % sys.argv[0]
         print '(timeout in minutes)'
         sys.exit(1)
     sensor = sys.argv[1]
     timeout = int(sys.argv[2])
     try:
-        code = check(sensor, timeout)
-    except Exception, e:
-        print "Error"
-        traceback.print_exc()
-        sys.exit(2)
+        num = int(sys.argv[3])
+    except:
+        num = 1
+    for x in range(num):
+        try:
+            code = check("%s-%d" % (sensor, x), timeout)
+        except Exception, e:
+            print "Error"
+            traceback.print_exc()
+            sys.exit(2)
     sys.exit(code)
 
 if __name__ == "__main__":
