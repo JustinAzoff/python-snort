@@ -1,3 +1,4 @@
+import os
 import binascii
 import IPy
 
@@ -7,14 +8,19 @@ from sqlalchemy import create_engine, Table, MetaData, or_, and_, select,func
 import ConfigParser
 
 class sdb:
-    def __init__(self):
-        self._connect()
+    def __init__(self, cfg_path=None):
+        self._connect(cfg_path)
         self.setwhere(range='hour')
         self.setlimit(1000)
 
-    def _connect(self):
+    def _connect(self, cfg_path=None):
         c = ConfigParser.ConfigParser()
-        paths = ['/etc/snort/db.cfg','db.cfg']
+        paths = ['/etc/snort/db.cfg','snort_db.cfg']
+        if cfg_path:
+            paths = [cfg_path]
+        env_path = os.getenv("SNORT_DB_CFG")
+        if env_path:
+            paths = [env_path]
         c.read(paths)
         uri = c.get('db','uri')
         self.engine=create_engine(uri)
